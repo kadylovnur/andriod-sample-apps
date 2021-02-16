@@ -27,7 +27,9 @@
             android:name=".SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Projemanag.NoActionBar" />
-
+        <activity android:name=".SignInActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Projemanag.NoActionBar" />
         <activity android:name=".MainActivity" />
     </application>
 
