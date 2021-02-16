@@ -1,5 +1,6 @@
 package com.shimnssso.android.projemanag
 
+import android.content.Intent
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,5 +24,11 @@ class IntroActivity : AppCompatActivity() {
         val typeface: Typeface =
             Typeface.createFromAsset(assets, "carbon bl.ttf")
         binding.tvAppNameIntro.typeface = typeface
+
+        binding.btnSignUpIntro.setOnClickListener {
+
+            // Launch the sign up screen.
+            startActivity(Intent(this@IntroActivity, SignUpActivity::class.java))
+        }
     }
 }
