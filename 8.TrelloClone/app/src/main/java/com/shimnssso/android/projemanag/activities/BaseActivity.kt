@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.shimnssso.android.projemanag.R
+import com.shimnssso.android.projemanag.databinding.DialogProgressBinding
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -30,12 +31,13 @@ open class BaseActivity : AppCompatActivity() {
     fun showProgressDialog(text: String) {
         mProgressDialog = Dialog(this)
 
+        val dialogBinding = DialogProgressBinding.inflate(layoutInflater)
+
         /*Set the screen content from a layout resource.
         The resource will be inflated, adding all top-level views to the screen.*/
-        mProgressDialog.setContentView(R.layout.dialog_progress)
+        mProgressDialog.setContentView(dialogBinding.root)
 
-        val tvProgressText : TextView = findViewById(R.id.tv_progress_text)
-        tvProgressText.text = text
+        dialogBinding.tvProgressText.text = text
 
         //Start the dialog and display it on screen.
         mProgressDialog.show()
