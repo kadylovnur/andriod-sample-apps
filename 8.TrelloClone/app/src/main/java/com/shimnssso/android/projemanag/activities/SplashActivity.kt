@@ -1,4 +1,4 @@
-package com.shimnssso.android.projemanag
+package com.shimnssso.android.projemanag.activities
 
 import android.content.Intent
 import android.graphics.Typeface

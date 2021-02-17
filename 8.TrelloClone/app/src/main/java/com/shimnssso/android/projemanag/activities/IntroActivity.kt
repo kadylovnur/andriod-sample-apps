@@ -1,4 +1,4 @@
-package com.shimnssso.android.projemanag
+package com.shimnssso.android.projemanag.activities
 
 import android.content.Intent
 import android.graphics.Typeface
@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import com.shimnssso.android.projemanag.databinding.ActivityIntroBinding
 
-class IntroActivity : AppCompatActivity() {
+class IntroActivity : BaseActivity() {
     private lateinit var binding: ActivityIntroBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

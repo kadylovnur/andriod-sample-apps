@@ -1,4 +1,4 @@
-package com.shimnssso.android.projemanag
+package com.shimnssso.android.projemanag.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
