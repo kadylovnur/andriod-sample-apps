@@ -32,7 +32,10 @@
             android:name=".activities.SignInActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Projemanag.NoActionBar" />
-        <activity android:name=".activities.MainActivity" />
+        <activity
+            android:name=".activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Projemanag.NoActionBar" />
     </application>
 
 </manifest>
