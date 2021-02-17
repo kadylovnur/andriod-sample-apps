@@ -10,6 +10,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.shimnssso.android.projemanag.R
 import com.shimnssso.android.projemanag.databinding.ActivitySignInBinding
+import com.shimnssso.android.projemanag.models.User
 
 class SignInActivity : BaseActivity() {
     private lateinit var binding: ActivitySignInBinding
@@ -101,5 +102,16 @@ class SignInActivity : BaseActivity() {
         } else {
             true
         }
+    }
+
+    /**
+     * A function to get the user details from the firestore database after authentication.
+     */
+    fun signInSuccess(user: User) {
+
+        hideProgressDialog()
+
+        startActivity(Intent(this@SignInActivity, MainActivity::class.java))
+        finish()
     }
 }
