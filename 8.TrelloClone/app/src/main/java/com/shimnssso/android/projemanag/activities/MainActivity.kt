@@ -4,22 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.shimnssso.android.projemanag.R
 import com.shimnssso.android.projemanag.databinding.ActivityMainBinding
-import com.shimnssso.android.projemanag.databinding.AppBarMainBinding
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var appBarBinding: AppBarMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        appBarBinding = AppBarMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupActionBar()
@@ -63,9 +61,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * A function to setup action bar
      */
     private fun setupActionBar() {
-        setSupportActionBar(appBarBinding.toolbarMainActivity)
-        appBarBinding.toolbarMainActivity.setNavigationIcon(R.drawable.ic_action_navigation_menu)
-        appBarBinding.toolbarMainActivity.setNavigationOnClickListener {
+        // View binding for included layout (https://stackoverflow.com/a/58730128)
+        setSupportActionBar(binding.appBarMain.toolbarMainActivity)
+        binding.appBarMain.toolbarMainActivity.setNavigationIcon(R.drawable.ic_action_navigation_menu)
+        binding.appBarMain.toolbarMainActivity.setNavigationOnClickListener {
             toggleDrawer()
         }
     }
