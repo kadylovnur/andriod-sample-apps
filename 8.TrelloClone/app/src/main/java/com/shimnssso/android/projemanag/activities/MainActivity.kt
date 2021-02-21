@@ -5,16 +5,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.shimnssso.android.projemanag.BoardItemsAdapter
 import com.shimnssso.android.projemanag.R
 import com.shimnssso.android.projemanag.databinding.ActivityMainBinding
 import com.shimnssso.android.projemanag.firebase.FirestoreClass
+import com.shimnssso.android.projemanag.models.Board
 import com.shimnssso.android.projemanag.models.User
 import com.shimnssso.android.projemanag.utils.Constants
 
@@ -33,8 +38,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         // Assign the NavigationView.OnNavigationItemSelectedListener to navigation view.
         binding.navView.setNavigationItemSelectedListener(this)
 
+        // Show the progress dialog.
+        showProgressDialog(resources.getString(R.string.please_wait))
         // Get the current logged in user details.
-        FirestoreClass().loadUserData(this@MainActivity)
+        FirestoreClass().loadUserData(this@MainActivity, true)
 
         binding.appBarMain.fabCreateBoard.setOnClickListener {
             val intent = Intent(this@MainActivity, CreateBoardActivity::class.java)
@@ -116,7 +123,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     /**
      * A function to get the current user details from firebase.
      */
-    fun updateNavigationUserDetails(user: User) {
+    fun updateNavigationUserDetails(user: User, isToReadBoardsList: Boolean) {
+
+        hideProgressDialog()
+
         mUserName = user.name
 
         // The instance of the header view of the navigation view.
@@ -137,7 +147,41 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val navUsername = headerView.findViewById<TextView>(R.id.tv_username)
         // Set the user name
         navUsername.text = user.name
+
+        if (isToReadBoardsList) {
+            // Show the progress dialog.
+            showProgressDialog(resources.getString(R.string.please_wait))
+            FirestoreClass().getBoardsList(this@MainActivity)
+        }
     }
+
+    /**
+     * A function to populate the result of BOARDS list in the UI i.e in the recyclerView.
+     */
+    fun populateBoardsListToUI(boardsList: ArrayList<Board>) {
+
+        hideProgressDialog()
+        val rvBoardList = findViewById<RecyclerView>(R.id.rv_boards_list)
+        val tvNoBoardsAvailable = findViewById<TextView>(R.id.tv_no_boards_available)
+
+        if (boardsList.size > 0) {
+            rvBoardList.visibility
+
+            rvBoardList.visibility = View.VISIBLE
+            tvNoBoardsAvailable.visibility = View.GONE
+
+            rvBoardList.layoutManager = LinearLayoutManager(this@MainActivity)
+            rvBoardList.setHasFixedSize(true)
+
+            // Create an instance of BoardItemsAdapter and pass the boardList to it.
+            val adapter = BoardItemsAdapter(this@MainActivity, boardsList)
+            rvBoardList.adapter = adapter // Attach the adapter to the recyclerView.
+        } else {
+            rvBoardList.visibility = View.GONE
+            tvNoBoardsAvailable.visibility = View.VISIBLE
+        }
+    }
+
 
     /**
      * A companion object to declare the constants.
