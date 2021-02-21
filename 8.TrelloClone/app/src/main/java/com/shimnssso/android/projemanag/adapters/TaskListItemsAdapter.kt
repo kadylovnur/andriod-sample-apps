@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.shimnssso.android.projemanag.activities.TaskListActivity
 import com.shimnssso.android.projemanag.databinding.ItemTaskBinding
 import com.shimnssso.android.projemanag.models.Task
 
@@ -53,7 +55,7 @@ open class TaskListItemsAdapter(
         val model = list[position]
 
         if (holder is MyViewHolder) {
-            holder.bind(position == list.size - 1)
+            holder.bind(position == list.size - 1, model, context)
         }
     }
 
@@ -81,13 +83,39 @@ open class TaskListItemsAdapter(
      */
     private class MyViewHolder(private val itemBinding: ItemTaskBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
-        fun bind(isLastItem: Boolean) {
+        fun bind(isLastItem: Boolean, model: Task, context: Context) {
             if (isLastItem) {
                 itemBinding.tvAddTaskList.visibility = View.VISIBLE
                 itemBinding.llTaskItem.visibility = View.GONE
             } else {
                 itemBinding.tvAddTaskList.visibility = View.GONE
                 itemBinding.llTaskItem.visibility = View.VISIBLE
+            }
+
+            itemBinding.tvTaskListTitle.text = model.title
+
+            itemBinding.tvAddTaskList.setOnClickListener {
+
+                itemBinding.tvAddTaskList.visibility = View.GONE
+                itemBinding.cvAddTaskListName.visibility = View.VISIBLE
+            }
+
+            itemBinding.ibCloseListName.setOnClickListener {
+                itemBinding.tvAddTaskList.visibility = View.VISIBLE
+                itemBinding.cvAddTaskListName.visibility = View.GONE
+            }
+
+            itemBinding.ibDoneListName.setOnClickListener {
+                val listName = itemBinding.etTaskListName.text.toString()
+
+                if (listName.isNotEmpty()) {
+                    // Here we check the context is an instance of the TaskListActivity.
+                    if (context is TaskListActivity) {
+                        context.createTaskList(listName)
+                    }
+                } else {
+                    Toast.makeText(context, "Please Enter List Name.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
