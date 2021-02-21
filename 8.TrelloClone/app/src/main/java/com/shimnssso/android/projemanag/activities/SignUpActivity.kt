@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.shimnssso.android.projemanag.R
-import com.shimnssso.android.projemanag.activities.firebase.FirestoreClass
+import com.shimnssso.android.projemanag.firebase.FirestoreClass
 import com.shimnssso.android.projemanag.databinding.ActivitySignUpBinding
 import com.shimnssso.android.projemanag.models.User
 

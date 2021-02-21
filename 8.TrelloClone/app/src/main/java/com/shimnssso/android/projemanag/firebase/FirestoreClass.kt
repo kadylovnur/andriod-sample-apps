@@ -1,4 +1,4 @@
-package com.shimnssso.android.projemanag.activities.firebase
+package com.shimnssso.android.projemanag.firebase
 
 import android.util.Log
 import com.google.firebase.auth.ktx.auth

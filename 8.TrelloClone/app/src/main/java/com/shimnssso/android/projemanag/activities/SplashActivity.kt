@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
-import com.shimnssso.android.projemanag.activities.firebase.FirestoreClass
+import com.shimnssso.android.projemanag.firebase.FirestoreClass
 import com.shimnssso.android.projemanag.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
