@@ -16,9 +16,12 @@ import com.shimnssso.android.projemanag.R
 import com.shimnssso.android.projemanag.databinding.ActivityMainBinding
 import com.shimnssso.android.projemanag.firebase.FirestoreClass
 import com.shimnssso.android.projemanag.models.User
+import com.shimnssso.android.projemanag.utils.Constants
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var mUserName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +37,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         FirestoreClass().loadUserData(this@MainActivity)
 
         binding.appBarMain.fabCreateBoard.setOnClickListener {
-            startActivity(Intent(this@MainActivity, CreateBoardActivity::class.java))
+            val intent = Intent(this@MainActivity, CreateBoardActivity::class.java)
+            intent.putExtra(Constants.NAME, mUserName)
+            startActivity(intent)
         }
     }
 
@@ -112,6 +117,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * A function to get the current user details from firebase.
      */
     fun updateNavigationUserDetails(user: User) {
+        mUserName = user.name
+
         // The instance of the header view of the navigation view.
         val headerView = binding.navView.getHeaderView(0)
 

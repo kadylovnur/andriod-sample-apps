@@ -7,10 +7,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.shimnssso.android.projemanag.activities.MainActivity
-import com.shimnssso.android.projemanag.activities.MyProfileActivity
-import com.shimnssso.android.projemanag.activities.SignInActivity
-import com.shimnssso.android.projemanag.activities.SignUpActivity
+import com.shimnssso.android.projemanag.activities.*
+import com.shimnssso.android.projemanag.models.Board
 import com.shimnssso.android.projemanag.models.User
 import com.shimnssso.android.projemanag.utils.Constants
 
@@ -118,6 +116,29 @@ class FirestoreClass {
                 )
             }
     }
+
+    fun createBoard(activity: CreateBoardActivity, board: Board) {
+
+        db.collection(Constants.BOARDS)
+            .document()
+            .set(board, SetOptions.merge())
+            .addOnSuccessListener {
+                Log.e(activity.javaClass.simpleName, "Board created successfully.")
+
+                Toast.makeText(activity, "Board created successfully.", Toast.LENGTH_SHORT).show()
+
+                activity.boardCreatedSuccessfully()
+            }
+            .addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(
+                    activity.javaClass.simpleName,
+                    "Error while creating a board.",
+                    e
+                )
+            }
+    }
+
 
     /**
      * A function for getting the user id of current logged user.

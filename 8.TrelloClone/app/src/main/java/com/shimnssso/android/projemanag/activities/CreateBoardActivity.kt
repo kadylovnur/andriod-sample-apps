@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -16,10 +15,12 @@ import com.shimnssso.android.projemanag.databinding.ActivityCreateBoardBinding
 import com.shimnssso.android.projemanag.utils.Constants
 import java.io.IOException
 
-class CreateBoardActivity : AppCompatActivity() {
+class CreateBoardActivity : BaseActivity() {
     private lateinit var binding: ActivityCreateBoardBinding
 
     private var mSelectedImageFileUri: Uri? = null
+
+    private lateinit var mUserName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +28,10 @@ class CreateBoardActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupActionBar()
+
+        if (intent.hasExtra(Constants.NAME)) {
+            mUserName = intent.getStringExtra(Constants.NAME)!!
+        }
 
         binding.ivBoardImage.setOnClickListener { view ->
 
@@ -111,5 +116,15 @@ class CreateBoardActivity : AppCompatActivity() {
         }
 
         binding.toolbarCreateBoardActivity.setNavigationOnClickListener { onBackPressed() }
+    }
+
+    /**
+     * A function for notifying the board is created successfully.
+     */
+    fun boardCreatedSuccessfully() {
+
+        hideProgressDialog()
+
+        finish()
     }
 }
