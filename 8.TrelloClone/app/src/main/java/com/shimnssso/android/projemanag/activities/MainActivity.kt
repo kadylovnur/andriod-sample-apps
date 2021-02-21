@@ -32,6 +32,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         // Get the current logged in user details.
         FirestoreClass().loadUserData(this@MainActivity)
+
+        binding.appBarMain.fabCreateBoard.setOnClickListener {
+            startActivity(Intent(this@MainActivity, CreateBoardActivity::class.java))
+        }
     }
 
     override fun onBackPressed() {
