@@ -1,10 +1,12 @@
 package com.shimnssso.android.projemanag.firebase
 
+import android.app.Activity
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.shimnssso.android.projemanag.activities.MainActivity
 import com.shimnssso.android.projemanag.activities.SignInActivity
 import com.shimnssso.android.projemanag.activities.SignUpActivity
 import com.shimnssso.android.projemanag.models.User
@@ -37,12 +39,10 @@ class FirestoreClass {
             }
     }
 
-    // TODO (Step 1: Create a function to SignIn using firebase and get the user details from Firestore Database.)
-    // START
     /**
      * A function to SignIn using firebase and get the user details from Firestore Database.
      */
-    fun signInUser(activity: SignInActivity) {
+    fun signInUser(activity: Activity) {
 
         // Here we pass the collection name from which we wants the data.
         db.collection(Constants.USERS)
@@ -58,9 +58,25 @@ class FirestoreClass {
                 val loggedInUser = document.toObject(User::class.java)!!
 
                 // Here call a function of base activity for transferring the result to it.
-                activity.signInSuccess(loggedInUser)
+                when (activity) {
+                    is SignInActivity -> {
+                        activity.signInSuccess(loggedInUser)
+                    }
+                    is MainActivity -> {
+                        activity.updateNavigationUserDetails(loggedInUser)
+                    }
+                }
             }
             .addOnFailureListener { e ->
+                // Here call a function of base activity for transferring the result to it.
+                when (activity) {
+                    is SignInActivity -> {
+                        activity.hideProgressDialog()
+                    }
+                    is MainActivity -> {
+                        activity.hideProgressDialog()
+                    }
+                }
                 Log.e(
                     activity.javaClass.simpleName,
                     "Error while getting loggedIn user details",
