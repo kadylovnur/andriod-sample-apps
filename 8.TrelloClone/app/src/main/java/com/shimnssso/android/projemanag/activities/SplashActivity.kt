@@ -35,7 +35,6 @@ class SplashActivity : AppCompatActivity() {
 
             // Get the current user id
             val currentUserID = FirestoreClass().getCurrentUserID()
-            // Start the Intro Activity
 
             if (currentUserID.isNotEmpty()) {
                 // Start the Main Activity

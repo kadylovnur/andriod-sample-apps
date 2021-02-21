@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
@@ -31,8 +29,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding.navView.setNavigationItemSelectedListener(this)
 
         // Get the current logged in user details.
-        FirestoreClass().signInUser(this@MainActivity)
-        // END
+        FirestoreClass().loadUserData(this@MainActivity)
     }
 
     override fun onBackPressed() {
@@ -112,5 +109,4 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         // Set the user name
         navUsername.text = user.name
     }
-    // END
 }
