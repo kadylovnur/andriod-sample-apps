@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.shimnssso.android.projemanag.BoardItemsAdapter
+import com.shimnssso.android.projemanag.adapters.BoardItemsAdapter
 import com.shimnssso.android.projemanag.R
 import com.shimnssso.android.projemanag.databinding.ActivityMainBinding
 import com.shimnssso.android.projemanag.firebase.FirestoreClass
