@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.shimnssso.android.projemanag.activities.TaskListActivity
 import com.shimnssso.android.projemanag.databinding.ItemTaskBinding
@@ -55,7 +56,68 @@ open class TaskListItemsAdapter(
         val model = list[position]
 
         if (holder is MyViewHolder) {
-            holder.bind(position == list.size - 1, model, context)
+            val isLastItem = position == list.size - 1
+            if (isLastItem) {
+                holder.itemBinding.tvAddTaskList.visibility = View.VISIBLE
+                holder.itemBinding.llTaskItem.visibility = View.GONE
+            } else {
+                holder.itemBinding.tvAddTaskList.visibility = View.GONE
+                holder.itemBinding.llTaskItem.visibility = View.VISIBLE
+            }
+
+            holder.itemBinding.tvTaskListTitle.text = model.title
+
+            holder.itemBinding.tvAddTaskList.setOnClickListener {
+
+                holder.itemBinding.tvAddTaskList.visibility = View.GONE
+                holder.itemBinding.cvAddTaskListName.visibility = View.VISIBLE
+            }
+
+            holder.itemBinding.ibCloseListName.setOnClickListener {
+                holder.itemBinding.tvAddTaskList.visibility = View.VISIBLE
+                holder.itemBinding.cvAddTaskListName.visibility = View.GONE
+            }
+
+            holder.itemBinding.ibDoneListName.setOnClickListener {
+                val listName = holder.itemBinding.etTaskListName.text.toString()
+
+                if (listName.isNotEmpty()) {
+                    // Here we check the context is an instance of the TaskListActivity.
+                    if (context is TaskListActivity) {
+                        context.createTaskList(listName)
+                    }
+                } else {
+                    Toast.makeText(context, "Please Enter List Name.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            holder.itemBinding.ibEditListName.setOnClickListener {
+                holder.itemBinding.etEditTaskListName.setText(model.title) // Set the existing title
+                holder.itemBinding.llTitleView.visibility = View.GONE
+                holder.itemBinding.cvEditTaskListName.visibility = View.VISIBLE
+            }
+
+            holder.itemBinding.ibCloseEditableView.setOnClickListener {
+                holder.itemBinding.llTitleView.visibility = View.VISIBLE
+                holder.itemBinding.cvEditTaskListName.visibility = View.GONE
+            }
+
+            holder.itemBinding.ibDoneEditListName.setOnClickListener {
+                val listName = holder.itemBinding.etEditTaskListName.text.toString()
+
+                if (listName.isNotEmpty()) {
+                    if (context is TaskListActivity) {
+                        context.updateTaskList(position, listName, model)
+                    }
+                } else {
+                    Toast.makeText(context, "Please Enter List Name.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            holder.itemBinding.ibDeleteList.setOnClickListener {
+                alertDialogForDeleteList(position, model.title)
+            }
+
         }
     }
 
@@ -78,45 +140,42 @@ open class TaskListItemsAdapter(
     private fun Int.toPx(): Int =
         (this * Resources.getSystem().displayMetrics.density).toInt()
 
+
+    /**
+     * Method is used to show the Alert Dialog for deleting the task list.
+     */
+    fun alertDialogForDeleteList(position: Int, title: String) {
+        val builder = AlertDialog.Builder(context)
+        //set title for alert dialog
+        builder.setTitle("Alert")
+        //set message for alert dialog
+        builder.setMessage("Are you sure you want to delete $title.")
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+        //performing positive action
+        builder.setPositiveButton("Yes") { dialogInterface, which ->
+            dialogInterface.dismiss() // Dialog will be dismissed
+
+            if (context is TaskListActivity) {
+                context.deleteTaskList(position)
+            }
+        }
+
+        //performing negative action
+        builder.setNegativeButton("No") { dialogInterface, which ->
+            dialogInterface.dismiss() // Dialog will be dismissed
+        }
+        // Create the AlertDialog
+        val alertDialog: AlertDialog = builder.create()
+        // Set other dialog properties
+        alertDialog.setCancelable(false) // Will not allow user to cancel after clicking on remaining screen area.
+        alertDialog.show()  // show the dialog to UI
+    }
+
+
     /**
      * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
      */
-    private class MyViewHolder(private val itemBinding: ItemTaskBinding) :
+    private class MyViewHolder(val itemBinding: ItemTaskBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
-        fun bind(isLastItem: Boolean, model: Task, context: Context) {
-            if (isLastItem) {
-                itemBinding.tvAddTaskList.visibility = View.VISIBLE
-                itemBinding.llTaskItem.visibility = View.GONE
-            } else {
-                itemBinding.tvAddTaskList.visibility = View.GONE
-                itemBinding.llTaskItem.visibility = View.VISIBLE
-            }
-
-            itemBinding.tvTaskListTitle.text = model.title
-
-            itemBinding.tvAddTaskList.setOnClickListener {
-
-                itemBinding.tvAddTaskList.visibility = View.GONE
-                itemBinding.cvAddTaskListName.visibility = View.VISIBLE
-            }
-
-            itemBinding.ibCloseListName.setOnClickListener {
-                itemBinding.tvAddTaskList.visibility = View.VISIBLE
-                itemBinding.cvAddTaskListName.visibility = View.GONE
-            }
-
-            itemBinding.ibDoneListName.setOnClickListener {
-                val listName = itemBinding.etTaskListName.text.toString()
-
-                if (listName.isNotEmpty()) {
-                    // Here we check the context is an instance of the TaskListActivity.
-                    if (context is TaskListActivity) {
-                        context.createTaskList(listName)
-                    }
-                } else {
-                    Toast.makeText(context, "Please Enter List Name.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
     }
 }
