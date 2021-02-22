@@ -8,6 +8,7 @@ import com.shimnssso.android.projemanag.adapters.TaskListItemsAdapter
 import com.shimnssso.android.projemanag.databinding.ActivityTaskListBinding
 import com.shimnssso.android.projemanag.firebase.FirestoreClass
 import com.shimnssso.android.projemanag.models.Board
+import com.shimnssso.android.projemanag.models.Card
 import com.shimnssso.android.projemanag.models.Task
 import com.shimnssso.android.projemanag.utils.Constants
 
@@ -111,7 +112,7 @@ class TaskListActivity : BaseActivity() {
     /**
      * A function to delete the task list from database.
      */
-    fun deleteTaskList(position: Int){
+    fun deleteTaskList(position: Int) {
 
         mBoardDetails.taskList.removeAt(position)
 
@@ -133,5 +134,34 @@ class TaskListActivity : BaseActivity() {
         // Show the progress dialog.
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().getBoardDetails(this@TaskListActivity, mBoardDetails.documentId)
+    }
+
+    /**
+     * A function to create a card and update it in the task list.
+     */
+    fun addCardToTaskList(position: Int, cardName: String) {
+
+        // Remove the last item
+        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
+
+        val cardAssignedUsersList: ArrayList<String> = ArrayList()
+        cardAssignedUsersList.add(FirestoreClass().getCurrentUserID())
+
+        val card = Card(cardName, FirestoreClass().getCurrentUserID(), cardAssignedUsersList)
+
+        val cardsList = mBoardDetails.taskList[position].cards
+        cardsList.add(card)
+
+        val task = Task(
+            mBoardDetails.taskList[position].title,
+            mBoardDetails.taskList[position].createdBy,
+            cardsList
+        )
+
+        mBoardDetails.taskList[position] = task
+
+        // Show the progress dialog.
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().addUpdateTaskList(this@TaskListActivity, mBoardDetails)
     }
 }
