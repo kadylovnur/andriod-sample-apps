@@ -1,13 +1,16 @@
 package com.shimnssso.android.projemanag.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.shimnssso.android.projemanag.R
+import com.shimnssso.android.projemanag.adapters.MemberListItemsAdapter
 import com.shimnssso.android.projemanag.databinding.ActivityMembersBinding
+import com.shimnssso.android.projemanag.firebase.FirestoreClass
 import com.shimnssso.android.projemanag.models.Board
+import com.shimnssso.android.projemanag.models.User
 import com.shimnssso.android.projemanag.utils.Constants
 
-class MembersActivity : AppCompatActivity() {
+class MembersActivity : BaseActivity() {
     private lateinit var binding: ActivityMembersBinding
     private lateinit var mBoardDetails: Board
 
@@ -21,6 +24,12 @@ class MembersActivity : AppCompatActivity() {
         }
 
         setupActionBar()
+
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().getAssignedMembersListDetails(
+            this@MembersActivity,
+            mBoardDetails.assignedTo
+        )
     }
 
     private fun setupActionBar() {
@@ -34,5 +43,19 @@ class MembersActivity : AppCompatActivity() {
         }
 
         binding.toolbarMembersActivity.setNavigationOnClickListener { onBackPressed() }
+    }
+
+    /**
+     * A function to setup assigned members list into recyclerview.
+     */
+    fun setupMembersList(list: ArrayList<User>) {
+
+        hideProgressDialog()
+
+        binding.rvMembersList.layoutManager = LinearLayoutManager(this@MembersActivity)
+        binding.rvMembersList.setHasFixedSize(true)
+
+        val adapter = MemberListItemsAdapter(this@MembersActivity, list)
+        binding.rvMembersList.adapter = adapter
     }
 }
