@@ -1,7 +1,10 @@
 package com.shimnssso.android.projemanag.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shimnssso.android.projemanag.R
 import com.shimnssso.android.projemanag.adapters.TaskListItemsAdapter
@@ -49,6 +52,25 @@ class TaskListActivity : BaseActivity() {
 
         binding.toolbarTaskListActivity.setNavigationOnClickListener { onBackPressed() }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu to use in the action bar
+        menuInflater.inflate(R.menu.menu_members, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle presses on the action bar menu items
+        when (item.itemId) {
+            R.id.action_members -> {
+
+                startActivity(Intent(this@TaskListActivity, MembersActivity::class.java))
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
     /**
      * A function to get the result of Board Detail.
