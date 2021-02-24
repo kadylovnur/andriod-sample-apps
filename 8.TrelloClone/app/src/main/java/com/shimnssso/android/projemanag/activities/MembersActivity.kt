@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shimnssso.android.projemanag.R
 import com.shimnssso.android.projemanag.adapters.MemberListItemsAdapter
@@ -19,6 +18,7 @@ import com.shimnssso.android.projemanag.utils.Constants
 class MembersActivity : BaseActivity() {
     private lateinit var binding: ActivityMembersBinding
     private lateinit var mBoardDetails: Board
+    private lateinit var mAssignedMembersList: ArrayList<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +73,7 @@ class MembersActivity : BaseActivity() {
      * A function to setup assigned members list into recyclerview.
      */
     fun setupMembersList(list: ArrayList<User>) {
+        mAssignedMembersList = list
 
         hideProgressDialog()
 
@@ -100,12 +101,12 @@ class MembersActivity : BaseActivity() {
 
             if (email.isNotEmpty()) {
                 dialog.dismiss()
+
+                // Show the progress dialog.
+                showProgressDialog(resources.getString(R.string.please_wait))
+                FirestoreClass().getMemberDetails(this@MembersActivity, email)
             } else {
-                Toast.makeText(
-                    this@MembersActivity,
-                    "Please enter members email address.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                showErrorSnackBar("Please enter members email address.")
             }
         })
         dialogBinding.tvCancel.setOnClickListener(View.OnClickListener {
@@ -113,5 +114,23 @@ class MembersActivity : BaseActivity() {
         })
         //Start the dialog and display it on screen.
         dialog.show()
+    }
+
+    fun memberDetails(user: User) {
+        mBoardDetails.assignedTo.add(user.id)
+
+        FirestoreClass().assignMemberToBoard(this@MembersActivity, mBoardDetails, user)
+    }
+
+    /**
+     * A function to get the result of assigning the members.
+     */
+    fun memberAssignSuccess(user: User) {
+
+        hideProgressDialog()
+
+        mAssignedMembersList.add(user)
+
+        setupMembersList(mAssignedMembersList)
     }
 }

@@ -22,6 +22,7 @@ object Constants {
     const val DOCUMENT_ID: String = "documentId"
     const val TASK_LIST: String = "taskList"
     const val ID: String = "id"
+    const val EMAIL: String = "email"
 
     const val BOARD_DETAIL: String = "board_detail"
 
