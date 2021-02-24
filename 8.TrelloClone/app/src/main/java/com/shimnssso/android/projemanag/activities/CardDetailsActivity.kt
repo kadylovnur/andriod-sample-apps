@@ -14,6 +14,7 @@ import com.shimnssso.android.projemanag.firebase.FirestoreClass
 import com.shimnssso.android.projemanag.models.Board
 import com.shimnssso.android.projemanag.models.Card
 import com.shimnssso.android.projemanag.models.Task
+import com.shimnssso.android.projemanag.models.User
 import com.shimnssso.android.projemanag.utils.Constants
 
 class CardDetailsActivity : BaseActivity() {
@@ -31,6 +32,9 @@ class CardDetailsActivity : BaseActivity() {
     // A global variable for selected label color
     private var mSelectedColor: String = ""
 
+    // A global variable for Assigned Members List.
+    private lateinit var mMembersDetailList: ArrayList<User>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCardDetailsBinding.inflate(layoutInflater)
@@ -42,6 +46,11 @@ class CardDetailsActivity : BaseActivity() {
 
         binding.etNameCardDetails.setText(mBoardDetails.taskList[mTaskListPosition].cards[mCardPosition].name)
         binding.etNameCardDetails.setSelection(binding.etNameCardDetails.text.toString().length) // The cursor after the string length
+
+        mSelectedColor = mBoardDetails.taskList[mTaskListPosition].cards[mCardPosition].labelColor
+        if (mSelectedColor.isNotEmpty()) {
+            setColor()
+        }
 
         binding.tvSelectLabelColor.setOnClickListener {
             labelColorsListDialog()
@@ -102,6 +111,9 @@ class CardDetailsActivity : BaseActivity() {
         }
         if (intent.hasExtra(Constants.CARD_LIST_ITEM_POSITION)) {
             mCardPosition = intent.getIntExtra(Constants.CARD_LIST_ITEM_POSITION, -1)
+        }
+        if (intent.hasExtra(Constants.BOARD_MEMBERS_LIST)) {
+            mMembersDetailList = intent.getParcelableArrayListExtra(Constants.BOARD_MEMBERS_LIST)!!
         }
     }
 
@@ -224,7 +236,8 @@ class CardDetailsActivity : BaseActivity() {
         val listDialog = object : LabelColorListDialog(
             this@CardDetailsActivity,
             colorsList,
-            resources.getString(R.string.str_select_label_color)
+            resources.getString(R.string.str_select_label_color),
+            mSelectedColor
         ) {
             override fun onItemSelected(color: String) {
                 mSelectedColor = color

@@ -14,6 +14,7 @@ import com.shimnssso.android.projemanag.firebase.FirestoreClass
 import com.shimnssso.android.projemanag.models.Board
 import com.shimnssso.android.projemanag.models.Card
 import com.shimnssso.android.projemanag.models.Task
+import com.shimnssso.android.projemanag.models.User
 import com.shimnssso.android.projemanag.utils.Constants
 
 class TaskListActivity : BaseActivity() {
@@ -24,6 +25,9 @@ class TaskListActivity : BaseActivity() {
 
     // A global variable for board document id as mBoardDocumentId
     private lateinit var mBoardDocumentId: String
+
+    // A global variable for Assigned Members List.
+    private lateinit var mAssignedMembersDetailList: ArrayList<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +115,13 @@ class TaskListActivity : BaseActivity() {
         // Create an instance of TaskListItemsAdapter and pass the task list to it.
         val adapter = TaskListItemsAdapter(this@TaskListActivity, board.taskList)
         binding.rvTaskList.adapter = adapter // Attach the adapter to the recyclerView.
+
+        // Show the progress dialog.
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().getAssignedMembersListDetails(
+            this@TaskListActivity,
+            mBoardDetails.assignedTo
+        )
     }
 
     /**
@@ -212,7 +223,18 @@ class TaskListActivity : BaseActivity() {
         intent.putExtra(Constants.BOARD_DETAIL, mBoardDetails)
         intent.putExtra(Constants.TASK_LIST_ITEM_POSITION, taskListPosition)
         intent.putExtra(Constants.CARD_LIST_ITEM_POSITION, cardPosition)
+        intent.putExtra(Constants.BOARD_MEMBERS_LIST, mAssignedMembersDetailList)
         startActivityForResult(intent, CARD_DETAILS_REQUEST_CODE)
+    }
+
+    /**
+     * A function to get assigned members detail list.
+     */
+    fun boardMembersDetailList(list: ArrayList<User>) {
+
+        mAssignedMembersDetailList = list
+
+        hideProgressDialog()
     }
 
     /**
