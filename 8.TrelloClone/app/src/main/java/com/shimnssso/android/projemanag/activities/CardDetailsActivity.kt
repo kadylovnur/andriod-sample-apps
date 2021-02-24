@@ -2,6 +2,8 @@ package com.shimnssso.android.projemanag.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import com.shimnssso.android.projemanag.R
 import com.shimnssso.android.projemanag.databinding.ActivityCardDetailsBinding
 import com.shimnssso.android.projemanag.models.Board
@@ -27,6 +29,26 @@ class CardDetailsActivity : AppCompatActivity() {
         getIntentData()
 
         setupActionBar()
+
+        binding.etNameCardDetails.setText(mBoardDetails.taskList[mTaskListPosition].cards[mCardPosition].name)
+        binding.etNameCardDetails.setSelection(binding.etNameCardDetails.text.toString().length) // The cursor after the string length
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu to use in the action bar
+        menuInflater.inflate(R.menu.menu_delete_card, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle presses on the action bar menu items
+        when (item.itemId) {
+            R.id.action_delete_card -> {
+
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     /**
