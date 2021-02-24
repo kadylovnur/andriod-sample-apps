@@ -1,5 +1,6 @@
 package com.shimnssso.android.projemanag.activities
 
+import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import android.view.Menu
@@ -20,6 +21,9 @@ class MembersActivity : BaseActivity() {
     private lateinit var mBoardDetails: Board
     private lateinit var mAssignedMembersList: ArrayList<User>
 
+    // A global variable for notifying any changes done or not in the assigned members list.
+    private var anyChangesDone: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMembersBinding.inflate(layoutInflater)
@@ -36,6 +40,13 @@ class MembersActivity : BaseActivity() {
             this@MembersActivity,
             mBoardDetails.assignedTo
         )
+    }
+
+    override fun onBackPressed() {
+        if (anyChangesDone) {
+            setResult(Activity.RESULT_OK)
+        }
+        super.onBackPressed()
     }
 
     private fun setupActionBar() {
@@ -130,6 +141,8 @@ class MembersActivity : BaseActivity() {
         hideProgressDialog()
 
         mAssignedMembersList.add(user)
+
+        anyChangesDone = true
 
         setupMembersList(mAssignedMembersList)
     }
