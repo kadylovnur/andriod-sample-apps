@@ -44,6 +44,12 @@ open class CardListItemsAdapter(
         if (holder is MyViewHolder) {
 
             holder.binding.tvCardName.text = model.name
+
+            holder.itemView.setOnClickListener {
+                if (onClickListener != null) {
+                    onClickListener!!.onClick(position)
+                }
+            }
         }
     }
 
@@ -65,7 +71,7 @@ open class CardListItemsAdapter(
      * An interface for onclick items.
      */
     interface OnClickListener {
-        fun onClick(position: Int, card: Card)
+        fun onClick(cardPosition: Int)
     }
 
     /**

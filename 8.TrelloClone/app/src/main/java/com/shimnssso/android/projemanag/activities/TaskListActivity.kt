@@ -205,6 +205,13 @@ class TaskListActivity : BaseActivity() {
     }
 
     /**
+     * A function for viewing and updating card details.
+     */
+    fun cardDetails(taskListPosition: Int, cardPosition: Int) {
+        startActivity(Intent(this@TaskListActivity, CardDetailsActivity::class.java))
+    }
+
+    /**
      * A companion object to declare the constants.
      */
     companion object {
