@@ -9,7 +9,8 @@ data class User(
     val email: String = "",
     val image: String = "",
     val mobile: Long = 0,
-    val fcmToken: String = ""
+    val fcmToken: String = "",
+    var selected: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
@@ -17,7 +18,8 @@ data class User(
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readLong(),
-        parcel.readString()!!
+        parcel.readString()!!,
+        parcel.readInt()!! == 1
     ) {
     }
 
@@ -30,6 +32,11 @@ data class User(
         writeString(image)
         writeLong(mobile)
         writeString(fcmToken)
+        var selectedValue = 0
+        if (selected) {
+            selectedValue = 1
+        }
+        writeInt(selectedValue)
     }
 
     companion object CREATOR : Parcelable.Creator<User> {
