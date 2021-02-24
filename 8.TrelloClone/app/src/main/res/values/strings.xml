@@ -56,4 +56,16 @@
     <string name="confirmation_message_to_delete_card">Are you sure you want to delete card \'%1$s\'?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
+    <string name="str_select_label_color">Select Label Color</string>
+
+    <dimen name="item_label_color_height">40dp</dimen>
+    <dimen name="item_label_color_margin">5dp</dimen>
+    <dimen name="item_label_color_selected_image_marginEnd">10dp</dimen>
+    <dimen name="dialog_list_cv_elevation_and_corner_radius">3dp</dimen>
+    <dimen name="dialog_list_content_padding">10dp</dimen>
+    <dimen name="dialog_list_title_padding">5dp</dimen>
+    <dimen name="dialog_list_title_text_size">18sp</dimen>
+    <dimen name="dialog_list_divider_height">1dp</dimen>
+    <dimen name="dialog_list_marginTopBottom">3dp</dimen>
 </resources>
