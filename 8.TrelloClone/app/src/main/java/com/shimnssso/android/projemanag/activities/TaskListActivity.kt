@@ -27,7 +27,7 @@ class TaskListActivity : BaseActivity() {
     private lateinit var mBoardDocumentId: String
 
     // A global variable for Assigned Members List.
-    private lateinit var mAssignedMembersDetailList: ArrayList<User>
+    lateinit var mAssignedMembersDetailList: ArrayList<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,18 +103,6 @@ class TaskListActivity : BaseActivity() {
 
         // Call the function to setup action bar.
         setupActionBar()
-
-        // Here we are appending an item view for adding a list task list for the board.
-        val addTaskList = Task(resources.getString(R.string.add_list))
-        board.taskList.add(addTaskList)
-
-        binding.rvTaskList.layoutManager =
-            LinearLayoutManager(this@TaskListActivity, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvTaskList.setHasFixedSize(true)
-
-        // Create an instance of TaskListItemsAdapter and pass the task list to it.
-        val adapter = TaskListItemsAdapter(this@TaskListActivity, board.taskList)
-        binding.rvTaskList.adapter = adapter // Attach the adapter to the recyclerView.
 
         // Show the progress dialog.
         showProgressDialog(resources.getString(R.string.please_wait))
@@ -235,6 +223,18 @@ class TaskListActivity : BaseActivity() {
         mAssignedMembersDetailList = list
 
         hideProgressDialog()
+
+        // Here we are appending an item view for adding a list task list for the board.
+        val addTaskList = Task(resources.getString(R.string.add_list))
+        mBoardDetails.taskList.add(addTaskList)
+
+        binding.rvTaskList.layoutManager =
+            LinearLayoutManager(this@TaskListActivity, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvTaskList.setHasFixedSize(true)
+
+        // Create an instance of TaskListItemsAdapter and pass the task list to it.
+        val adapter = TaskListItemsAdapter(this@TaskListActivity, mBoardDetails.taskList)
+        binding.rvTaskList.adapter = adapter // Attach the adapter to the recyclerView.
     }
 
     /**
