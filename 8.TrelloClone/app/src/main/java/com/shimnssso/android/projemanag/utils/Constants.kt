@@ -45,6 +45,16 @@ object Constants {
     const val FCM_TOKEN: String = "fcmToken"
     const val FCM_TOKEN_UPDATED: String = "fcmTokenUpdated"
 
+    const val FCM_BASE_URL: String = "https://fcm.googleapis.com/fcm/send"
+    const val FCM_AUTHORIZATION: String = "authorization"
+    const val FCM_KEY: String = "key"
+    const val FCM_SERVER_KEY: String =
+        "AAAAgIAcWuI:APA91bE1C5LGEv794ms3JVcr5OU3QdnwatXq8TufbThP7L5Afec7LUTf4Mpln9pkyz5RAe3YASxRN-7WCkN8c-lUbqxBkIkxtF3azR3S8YeXAl6wL2V4efCN2uCrCPxepvBuinnVYH9J"
+    const val FCM_KEY_TITLE: String = "title"
+    const val FCM_KEY_MESSAGE: String = "message"
+    const val FCM_KEY_DATA: String = "data"
+    const val FCM_KEY_TO: String = "to"
+
     /**
      * A function for user profile image selection from phone storage.
      */
