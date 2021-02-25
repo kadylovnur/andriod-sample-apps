@@ -1,7 +1,9 @@
 package com.shimnssso.android.projemanag.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -14,9 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
-import com.shimnssso.android.projemanag.adapters.BoardItemsAdapter
 import com.shimnssso.android.projemanag.R
+import com.shimnssso.android.projemanag.adapters.BoardItemsAdapter
 import com.shimnssso.android.projemanag.databinding.ActivityMainBinding
 import com.shimnssso.android.projemanag.firebase.FirestoreClass
 import com.shimnssso.android.projemanag.models.Board
@@ -28,6 +31,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private lateinit var mUserName: String
 
+    // A global variable for SharedPreferences
+    private lateinit var mSharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -38,10 +44,24 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         // Assign the NavigationView.OnNavigationItemSelectedListener to navigation view.
         binding.navView.setNavigationItemSelectedListener(this)
 
-        // Show the progress dialog.
-        showProgressDialog(resources.getString(R.string.please_wait))
-        // Get the current logged in user details.
-        FirestoreClass().loadUserData(this@MainActivity, true)
+        mSharedPreferences =
+            this.getSharedPreferences(Constants.PROGEMANAG_PREFERENCES, Context.MODE_PRIVATE)
+
+        // Variable is used get the value either token is updated in the database or not.
+        val tokenUpdated = mSharedPreferences.getBoolean(Constants.FCM_TOKEN_UPDATED, false)
+
+        // Here if the token is already updated than we don't need to update it every time.
+        if (tokenUpdated) {
+            // Get the current logged in user details.
+            // Show the progress dialog.
+            showProgressDialog(resources.getString(R.string.please_wait))
+            FirestoreClass().loadUserData(this@MainActivity, true)
+        } else {
+            FirebaseInstanceId.getInstance()
+                .instanceId.addOnSuccessListener(this@MainActivity) { instanceIdResult ->
+                    updateFCMToken(instanceIdResult.token)
+                }
+        }
 
         binding.appBarMain.fabCreateBoard.setOnClickListener {
             val intent = Intent(this@MainActivity, CreateBoardActivity::class.java)
@@ -71,6 +91,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.nav_sign_out -> {
                 // Here sign outs the user from firebase in this device.
                 Firebase.auth.signOut()
+
+                mSharedPreferences.edit().clear().apply()
 
                 // Send the user to the intro screen of the application.
                 val intent = Intent(this, IntroActivity::class.java)
@@ -161,6 +183,20 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     /**
+     * A function to update the user's FCM token into the database.
+     */
+    private fun updateFCMToken(token: String) {
+
+        val userHashMap = HashMap<String, Any>()
+        userHashMap[Constants.FCM_TOKEN] = token
+
+        // Update the data in the database.
+        // Show the progress dialog.
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().updateUserProfileData(this@MainActivity, userHashMap)
+    }
+
+    /**
      * A function to populate the result of BOARDS list in the UI i.e in the recyclerView.
      */
     fun populateBoardsListToUI(boardsList: ArrayList<Board>) {
@@ -196,6 +232,24 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
+    /**
+     * A function to notify the token is updated successfully in the database.
+     */
+    fun tokenUpdateSuccess() {
+
+        hideProgressDialog()
+
+        // Here we have added a another value in shared preference that the token is updated in the database successfully.
+        // So we don't need to update it every time.
+        val editor: SharedPreferences.Editor = mSharedPreferences.edit()
+        editor.putBoolean(Constants.FCM_TOKEN_UPDATED, true)
+        editor.apply()
+
+        // Get the current logged in user details.
+        // Show the progress dialog.
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().loadUserData(this@MainActivity, true)
+    }
 
     /**
      * A companion object to declare the constants.
